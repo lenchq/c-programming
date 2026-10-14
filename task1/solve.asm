@@ -13,13 +13,13 @@ MAIN:
 
     ; == ВЫЗОВЫ ФУНКЦИЙ ==
 
-    CALL SUM ; -> A = 12
+    CALL SUM ; -> A = 22
 
-    CALL SUB ; -> A = -2
+    CALL SUB ; -> A = 8
 
-    CALL MUL ; -> A = 35
+    CALL MUL ; -> A = 105
 
-    CALL DIV ; -> A = 35
+    CALL DIV ; -> A = 2
 
     ; поместить результаты из 0403h - 0406h в регистры A, B, C, D.
 
