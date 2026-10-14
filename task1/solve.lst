@@ -1,7 +1,7 @@
               	; --------------------------------------
               	; zasm: assemble "solve.asm"
               	; opts: --asm8080 --reqcolon
-              	; date: 2026-10-15 00:10:32
+              	; date: 2026-10-15 00:27:46
               	; --------------------------------------
 
 
@@ -126,5 +126,5 @@
 0406: FF      	RESULT_DIV: DS 1 ; -> 0406h
 
 
-total time: 0.0395 sec.
+total time: 0.0291 sec.
 no errors
