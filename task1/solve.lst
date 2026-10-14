@@ -1,7 +1,7 @@
               	; --------------------------------------
               	; zasm: assemble "solve.asm"
               	; opts: --asm8080 --reqcolon
-              	; date: 2026-10-14 21:46:05
+              	; date: 2026-10-15 00:10:32
               	; --------------------------------------
 
 
@@ -30,7 +30,7 @@
               	
               	    ; поместить результаты из 0403h - 0406h в регистры A, B, C, D.
               	
-0019: 210204  	    LXI H, RESULT_SUM; HL = 0403h
+0019: 210304  	    LXI H, RESULT_SUM; HL = 0403h
 001C: 7E      	    MOV A, M ; A = 0403h
 001D: 23      	    INX H
 001E: 46      	    MOV B, M ; B = 0404h
@@ -50,7 +50,7 @@
 0203: 7E      	    MOV A, M ; A = VAR_A
 0204: 23      	    INX H ; Loc(HL)++
 0205: 86      	    ADD M ;A<-Loc(HL) + (A)
-0206: 320204  	    STA RESULT_SUM ;RESULT_SUM(0403h) <- A
+0206: 320304  	    STA RESULT_SUM ;RESULT_SUM(0403h) <- A
               	
 0209: C9      	    RET
 020A:         	SUB:
@@ -58,7 +58,7 @@
 020D: 7E      	    MOV A, M ; A = VAR_A
 020E: 23      	    INX H ; Loc(HL)++
 020F: 96      	    SUB M ;A<-Loc(HL) + (A)
-0210: 320304  	    STA RESULT_SUB ;RESULT_SUM(0403h) <- A
+0210: 320404  	    STA RESULT_SUB ;RESULT_SUM(0403h) <- A
               	
 0213: C9      	    RET
 0214:         	MUL:
@@ -82,46 +82,49 @@
               	    ; if c == 0 { goto loop }
 0223: C22102  	    JNZ MUL_LOOP
 0226:         	MUL_DONE:
-0226: 320404  	    STA RESULT_MUL
+0226: 320504  	    STA RESULT_MUL
 0229: C9      	    RET
               	
 022A:         	DIV:
-022A: 0E00    	    MVI C, 00H
-              	
+022A: 210004  	    LXI H, VAR_A ; Loc(HL) = VAR_A
+022D: 56      	    MOV D, M ; D = VAR_A, делимое
+022E: 23      	    INX H ; Loc(HL)++
+022F: 7E      	    MOV A, M ; A = VAR_B, делитель
               	    ; выход если делим на 0
-022C: 50      	    MOV D, B
-022D: 14      	    INR D
-022E: 15      	    DCR D
-022F: CA3B02  	    JZ DIV_ERR
-0232:         	DIV_LOOP:
-0232: B8      	    CMP B
-0233: DA3D02  	    JC DIV_DONE ; выход если carry = 1
+0230: B7      	    ORA A
+0231: CA4102  	    JZ DIV_ERR
               	
-0236: 90      	    SUB B ; A = A - B
-0237: 0C      	    INR C ; C = C + 1
-0238: C33202  	    JMP DIV_LOOP
-023B:         	DIV_ERR:
-023B: 0EFF    	    MVI C, 0FFH     ; возвращаем OFFH (код ошибки)
-023D:         	DIV_DONE:
-              	    ; C = частное
+0234: 47      	    MOV B, A ; B = делитель
+0235: 7A      	    MOV A, D ; A  = делимое
+0236: 0E00    	    MVI C, 00h ; частное
+0238:         	DIV_LOOP:
+0238: B8      	    CMP B
+0239: DA4302  	    JC DIV_DONE ; выход если carry = 1
+              	
+023C: 90      	    SUB B ; A = A - B
+023D: 0C      	    INR C ; C++
+023E: C33802  	    JMP DIV_LOOP
+0241:         	DIV_ERR:
+0241: 3EFF    	    MVI A, 0FFH     ; возвращаем 0FFH (код ошибки)
+0243:         	DIV_DONE:
               	    ; A = остаток
-              	    ; остаток не нужен
-023D: 79      	    MOV A, C
-023E: 320504  	    STA RESULT_DIV
-0241: C9      	    RET
+              	    ; C = частное
+0243: 79      	    MOV A, C
+0244: 320604  	    STA RESULT_DIV
+0247: C9      	    RET
               	
               	
               	; === Данные для функций ===
               	ORG 0400h
               	
 0400: FF      	VAR_A: DS 1 ; -> 0400h
-0401: FF      	VAR_B: DS 1 ; -> 0401h
+0401: FFFF    	VAR_B: DS 2 ; -> 0401h
               	; -> 402h
-0402: FF      	RESULT_SUM: DS 1 ; -> 0403h
-0403: FF      	RESULT_SUB: DS 1 ; -> 0404h
-0404: FF      	RESULT_MUL: DS 1 ; -> 0405h
-0405: FF      	RESULT_DIV: DS 1 ; -> 0406h
+0403: FF      	RESULT_SUM: DS 1 ; -> 0403h
+0404: FF      	RESULT_SUB: DS 1 ; -> 0404h
+0405: FF      	RESULT_MUL: DS 1 ; -> 0405h
+0406: FF      	RESULT_DIV: DS 1 ; -> 0406h
 
 
-total time: 0.0369 sec.
+total time: 0.0395 sec.
 no errors

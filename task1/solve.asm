@@ -79,26 +79,29 @@ MUL_DONE:
     RET
 
 DIV:
-    MVI C, 00H
-
+    LXI H, VAR_A ; Loc(HL) = VAR_A
+    MOV D, M ; D = VAR_A, делимое
+    INX H ; Loc(HL)++
+    MOV A, M ; A = VAR_B, делитель
     ; выход если делим на 0
-    MOV D, B
-    INR D
-    DCR D
+    ORA A
     JZ DIV_ERR
+
+    MOV B, A ; B = делитель
+    MOV A, D ; A  = делимое
+    MVI C, 00h ; частное
 DIV_LOOP:
     CMP B
     JC DIV_DONE ; выход если carry = 1
 
     SUB B ; A = A - B
-    INR C ; C = C + 1
+    INR C ; C++
     JMP DIV_LOOP
 DIV_ERR:
-    MVI C, 0FFH     ; возвращаем OFFH (код ошибки)
+    MVI A, 0FFH     ; возвращаем 0FFH (код ошибки)
 DIV_DONE:
-    ; C = частное
     ; A = остаток
-    ; остаток не нужен
+    ; C = частное
     MOV A, C
     STA RESULT_DIV
     RET
@@ -108,7 +111,7 @@ DIV_DONE:
 ORG 0400h
 
 VAR_A: DS 1 ; -> 0400h
-VAR_B: DS 1 ; -> 0401h
+VAR_B: DS 2 ; -> 0401h
 ; -> 402h
 RESULT_SUM: DS 1 ; -> 0403h
 RESULT_SUB: DS 1 ; -> 0404h
