@@ -10,7 +10,9 @@
 - [Assembler](./assembler)
 - [Display](./display)
 - [Stack Machine](./stack-machine)
+- [Компоненты](./components)
 
 Все скриншоты решений и экспорт прогресса
 [Google disk](https://drive.google.com/drive/folders/1uZWll7BcgNNzG3mmpx4v4VqPfVqlwaQW?usp=drive_link)
 [Github](https://github.com/lenchq/c-programming/tree/master/nandgame)
+[Выгрузка nandgame](./nandgame_20261014.json)
